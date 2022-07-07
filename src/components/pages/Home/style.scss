@@ -1,0 +1,17 @@
+@import "../../../assets/css/variables";
+@import "../../../assets/css/common";
+
+#home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  .wrapper {
+    flex-direction: column;
+    display: flex;
+    gap: 15px;
+    max-width: 200px;
+    width: 100%;
+  }
+}
