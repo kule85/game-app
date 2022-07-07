@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  useContext,
   useEffect,
   useState,
   useMemo,
@@ -32,7 +31,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
     if (numberOfPlayers) {
       navigate('/game')
     }
-  }, [numberOfPlayers])
+  }, [numberOfPlayers, navigate])
 
   const value = useMemo(
     () => ({

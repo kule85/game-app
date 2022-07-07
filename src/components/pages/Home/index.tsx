@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import Button from '@mui/material/Button'
 
-import { useAuth } from "../../../hooks";
+import { useAuth } from '../../../hooks'
 
 import './style.scss'
 

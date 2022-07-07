@@ -1,0 +1,75 @@
+@import "../../../assets/css/variables";
+
+#game {
+  color: $white;
+
+  .select-players {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 150px;
+
+    label,
+    svg,
+    & > div {
+      color: $white;
+    }
+
+    fieldset {
+      border-color: $white;
+    }
+  }
+
+  .wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+
+    h4 {
+      margin: 0;
+    }
+
+    &.players-2 {
+      justify-content: space-around;
+      flex-direction: column;
+    }
+
+    &.players-3,
+    &.players-4 {
+      justify-content: center;
+
+      .comp-1 {
+        position: absolute;
+        left: 228px;
+        transform: rotateZ(90deg);
+      }
+
+      .human {
+        position: absolute;
+        bottom: 228px;
+      }
+    }
+
+    &.players-3 {
+      .comp-2 {
+        position: absolute;
+        right: 228px;
+        transform: rotateZ(-90deg);
+      }
+    }
+
+    &.players-4 {
+      .comp-2 {
+        position: absolute;
+        top: 228px;
+      }
+
+      .comp-3 {
+        position: absolute;
+        right: 228px;
+        transform: rotateZ(-90deg);
+      }
+
+    }
+  }
+}
