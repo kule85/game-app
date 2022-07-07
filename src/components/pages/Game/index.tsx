@@ -1,6 +1,8 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Select, FormControl, MenuItem, InputLabel } from '@mui/material'
 
+import PlayerCards from '../../molecules/PlayerCards'
+
 import { useAuth } from '../../../hooks/'
 import { getRandomPlayers } from '../../../helper'
 import { COMPUTER_PLAYERS, HUMAN_PLAYER } from '../../../utils'
@@ -50,9 +52,18 @@ const Game: FC = () => {
           return (
             <div
               key={key}
-              className={player.isHumanPlayer ? 'human' : `comp-${key + 1}`}
+              className={`player ${
+                player.isHumanPlayer ? 'human' : `comp-${key + 1}`
+              }`}
             >
               <h4>{player.name}</h4>
+              <p>Score: 0</p>
+              {player.cards.length && (
+                <PlayerCards
+                  cards={player.cards}
+                  isHuman={player.isHumanPlayer}
+                />
+              )}
             </div>
           )
         })}

@@ -1,0 +1,21 @@
+@import '../../../assets/css/variables';
+
+.card:not(.human-card):not(:first-child) {
+  margin-left: -45px;
+}
+
+.card {
+  width: 80px;
+  height: 130px;
+  border: 1px solid $white;
+  background-color: $green;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.human-card {
+    cursor: pointer;
+    margin: 0 2px;
+  }
+}

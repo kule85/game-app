@@ -1,4 +1,4 @@
-@import "../../../assets/css/variables";
+@import '../../../assets/css/variables';
 
 #game {
   color: $white;
@@ -25,13 +25,30 @@
     display: flex;
     align-items: center;
 
-    h4 {
+    h4,
+    p {
       margin: 0;
     }
 
-    &.players-2 {
-      justify-content: space-around;
+    .player {
+      display: flex;
+      justify-content: center;
       flex-direction: column;
+      gap: 15px;
+    }
+
+    &.players-2 {
+      justify-content: center;
+
+      .comp-1 {
+        position: absolute;
+        top: 15px;
+      }
+
+      .human {
+        position: absolute;
+        bottom: 15px;
+      }
     }
 
     &.players-3,
@@ -40,36 +57,32 @@
 
       .comp-1 {
         position: absolute;
-        left: 228px;
-        transform: rotateZ(90deg);
+        left: 15px;
       }
 
       .human {
         position: absolute;
-        bottom: 228px;
+        bottom: 15px;
       }
     }
 
     &.players-3 {
       .comp-2 {
         position: absolute;
-        right: 228px;
-        transform: rotateZ(-90deg);
+        right: 15px;
       }
     }
 
     &.players-4 {
       .comp-2 {
         position: absolute;
-        top: 228px;
+        top: 15px;
       }
 
       .comp-3 {
         position: absolute;
-        right: 228px;
-        transform: rotateZ(-90deg);
+        right: 15px;
       }
-
     }
   }
 }
