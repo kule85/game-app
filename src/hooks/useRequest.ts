@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types'
-
 import { request } from '../utils'
 
 type Methods = 'head' | 'options' | 'put' | 'post' | 'patch' | 'delete' | 'get'
@@ -7,14 +5,14 @@ type Methods = 'head' | 'options' | 'put' | 'post' | 'patch' | 'delete' | 'get'
 interface paramsInterface {
   url: string
   method: Methods
-  body: object | null
-  callback: any
+  body?: object
+  callback?: any
 }
 
 export const useRequest = (params: paramsInterface) => {
   const { url, method, body, callback } = params
 
-  const doRequest = async (additionalParams: object) => {
+  const doRequest = async (additionalParams?: object) => {
     if (callback) {
       callback({ data: [], loading: true, error: null })
     }
@@ -38,16 +36,4 @@ export const useRequest = (params: paramsInterface) => {
   }
 
   return { doRequest }
-}
-
-useRequest.propTypes = {
-  url: PropTypes.string.isRequired,
-  method: PropTypes.string.isRequired,
-  body: PropTypes.object,
-  callback: PropTypes.func,
-}
-
-useRequest.defaultProps = {
-  method: 'get',
-  body: {},
 }

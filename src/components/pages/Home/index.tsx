@@ -11,6 +11,7 @@ const Home: FC = () => {
   return (
     <div id="home">
       <div className="wrapper">
+        <h2>Select number of players</h2>
         <Button
           variant="contained"
           className="btn-custom"
