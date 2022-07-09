@@ -11,6 +11,7 @@ interface paramsInterface {
 
 export const useRequest = (params: paramsInterface) => {
   const { url, method, body, callback } = params
+  let isFetched = true
 
   const doRequest = async (additionalParams?: object) => {
     if (callback) {
@@ -18,12 +19,12 @@ export const useRequest = (params: paramsInterface) => {
     }
 
     try {
-      if (method) {
+      if (method && isFetched) {
+        isFetched = false
         const response = await request[method](url, {
           ...body,
           ...additionalParams,
         })
-
         if (callback) {
           callback({ data: response.data, loading: false, error: null })
         }

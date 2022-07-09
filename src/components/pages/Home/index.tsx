@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import Button from '@mui/material/Button'
 
 import { useAuth } from '../../../hooks'
+import { SELECT_PLAYER_OPTIONS } from '../../../utils'
 
 import './style.scss'
 
@@ -12,27 +13,18 @@ const Home: FC = () => {
     <div id="home">
       <div className="wrapper">
         <h2>Select number of players</h2>
-        <Button
-          variant="contained"
-          className="btn-custom"
-          onClick={() => setNumberOfPlayers(2)}
-        >
-          2 Players
-        </Button>
-        <Button
-          variant="contained"
-          className="btn-custom"
-          onClick={() => setNumberOfPlayers(3)}
-        >
-          3 Players
-        </Button>
-        <Button
-          variant="contained"
-          className="btn-custom"
-          onClick={() => setNumberOfPlayers(4)}
-        >
-          4 Players
-        </Button>
+        {SELECT_PLAYER_OPTIONS.map((item, key) => {
+          return (
+            <Button
+              key={key}
+              variant="contained"
+              className="btn-custom"
+              onClick={() => setNumberOfPlayers(item.value)}
+            >
+              {item.label}
+            </Button>
+          )
+        })}
       </div>
     </div>
   )

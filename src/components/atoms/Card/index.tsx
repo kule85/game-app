@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, memo } from 'react'
 
 import './style.scss'
 
@@ -15,4 +15,4 @@ const Card: FC<Props> = ({ value, isHuman }) => {
   )
 }
 
-export default Card
+export default memo(Card)

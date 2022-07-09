@@ -27,3 +27,18 @@ export const HUMAN_PLAYER = [
     isHumanPlayer: true,
   },
 ]
+
+export const SELECT_PLAYER_OPTIONS = [
+  {
+    label: '2 Players',
+    value: 2,
+  },
+  {
+    label: '3 Players',
+    value: 3,
+  },
+  {
+    label: '4 Players',
+    value: 4,
+  },
+]

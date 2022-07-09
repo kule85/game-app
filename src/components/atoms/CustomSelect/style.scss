@@ -1,0 +1,13 @@
+@import '../../../assets/css/variables';
+
+.custom-select {
+  label,
+  svg,
+  & > div {
+    color: $white;
+  }
+
+  fieldset {
+    border-color: $white;
+  }
+}

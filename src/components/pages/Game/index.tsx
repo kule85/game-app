@@ -1,11 +1,12 @@
-import React, { FC, useEffect, useState } from 'react'
-import { Select, FormControl, MenuItem, InputLabel } from '@mui/material'
+import React, { FC, useEffect, useState, useCallback } from 'react'
+import { Button } from '@mui/material'
 
 import PlayerCards from '../../molecules/PlayerCards'
+import CustomSelect from '../../atoms/CustomSelect'
 
-import { useAuth } from '../../../hooks/'
+import { useAuth, useRequest } from '../../../hooks/'
 import { getRandomPlayers } from '../../../helper'
-import { COMPUTER_PLAYERS, HUMAN_PLAYER } from '../../../utils'
+import { COMPUTER_PLAYERS, HUMAN_PLAYER, SELECT_PLAYER_OPTIONS } from '../../../utils'
 
 import './style.scss'
 
@@ -14,12 +15,23 @@ const initPlayersState: any[] = []
 const Game: FC = () => {
   const { numberOfPlayers, setNumberOfPlayers } = useAuth()
   const [players, setPlayers] = useState(initPlayersState)
+  const [deckId, setDeckId] = useState(null)
+
+  const { doRequest } = useRequest({
+    url: 'deck/new/shuffle/?deck_count=1',
+    method: 'get',
+    callback: (response: any) => setDeckId(response?.data?.deck_id || null),
+  })
+
+  const handleDraw = useCallback(async () => await doRequest(), [doRequest])
 
   useEffect(() => {
     const compPlayers = getRandomPlayers(COMPUTER_PLAYERS, numberOfPlayers - 1)
 
     setPlayers([...compPlayers, ...HUMAN_PLAYER])
   }, [numberOfPlayers])
+
+  console.log(deckId)
 
   const getCustomWrapperClass = () => {
     switch (numberOfPlayers) {
@@ -34,20 +46,22 @@ const Game: FC = () => {
 
   return (
     <div id="game">
-      <FormControl className="select-players">
-        <InputLabel id="select_players">Number of players</InputLabel>
-        <Select
-          labelId="select_players"
-          value={numberOfPlayers}
-          label="Number of players"
-          onChange={(e) => setNumberOfPlayers(e.target.value)}
-        >
-          <MenuItem value={2}>2 Players</MenuItem>
-          <MenuItem value={3}>3 Players</MenuItem>
-          <MenuItem value={4}>4 Players</MenuItem>
-        </Select>
-      </FormControl>
+      <CustomSelect
+        name="players"
+        label="Number of players"
+        className="select-players"
+        options={SELECT_PLAYER_OPTIONS}
+        value={numberOfPlayers}
+        onChange={(name, value) => setNumberOfPlayers(value)}
+      />
       <div className={`wrapper ${getCustomWrapperClass()}`}>
+        <Button
+          variant="contained"
+          className="btn-custom"
+          onClick={() => handleDraw()}
+        >
+          Draw
+        </Button>
         {players.map((player, key) => {
           return (
             <div
