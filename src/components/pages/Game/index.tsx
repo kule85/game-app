@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState, useCallback } from 'react'
 
 import CustomSelect from '../../atoms/CustomSelect'
 import CustomButton from '../../atoms/CustomButton'
+import Notification from '../../atoms/Notification'
 import PlayerDeck from '../../organisms/PlayerDeck'
 
 import { useAuth, useRequest } from '../../../hooks/'
@@ -14,33 +15,40 @@ import {
 
 import './style.scss'
 
+type DeckProps = {
+  data: any
+  loading: boolean
+  error: any
+}
+
 const initPlayersState: any[] = []
+const initDeckState: DeckProps = { data: {}, loading: false, error: null }
 
 const Game: FC = () => {
   const { numberOfPlayers, setNumberOfPlayers } = useAuth()
   const [players, setPlayers] = useState(initPlayersState)
-  const [deckId, setDeckId] = useState(null)
+  const [deckData, setDeckData] = useState(initDeckState)
 
   const { doRequest: getPlayerDeck } = useRequest({
-    url: 'deck/new/shuffle/?deck_count=1',
+    url: 'deck/new/shuffledsad/?deck_count=1',
     method: 'get',
-    callback: (response: any) => setDeckId(response?.data?.deck_id || null),
+    callback: (response: any) => setDeckData(response),
   })
 
-  const { doRequest: getPlayerCards } = useRequest({
-    url: `deck/${deckId}/draw/?count=10`,
-    method: 'get',
-    callback: (response: any) => console.log(response),
-  })
+  // const { doRequest: getPlayerCards } = useRequest({
+  //   url: `deck/${deckId}/draw/?count=10`,
+  //   method: 'get',
+  //   callback: (response: any) => console.log(response),
+  // })
 
   const handleDraw = useCallback(
     async () => await getPlayerDeck(),
     [getPlayerDeck]
   )
-  const handleCards = useCallback(
-    async () => await getPlayerCards(),
-    [getPlayerCards]
-  )
+  // const handleCards = useCallback(
+  //   async () => await getPlayerCards(),
+  //   [getPlayerCards]
+  // )
 
   useEffect(() => {
     const compPlayers = getRandomPlayers(COMPUTER_PLAYERS, numberOfPlayers - 1)
@@ -48,11 +56,11 @@ const Game: FC = () => {
     setPlayers([...compPlayers, ...HUMAN_PLAYER])
   }, [numberOfPlayers])
 
-  useEffect(() => {
-    if (deckId) {
-      handleCards()
-    }
-  }, [deckId])
+  // useEffect(() => {
+  //   if (deckId) {
+  //     handleCards()
+  //   }
+  // }, [deckId])
 
   const getCustomWrapperClass = () => {
     switch (numberOfPlayers) {
@@ -67,6 +75,12 @@ const Game: FC = () => {
 
   return (
     <div id="game">
+      {deckData?.error && (
+        <Notification
+          type="error"
+          message={deckData?.error?.statusText}
+        />
+      )}
       <CustomSelect
         name="players"
         label="Number of players"
