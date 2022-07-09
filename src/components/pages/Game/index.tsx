@@ -3,6 +3,7 @@ import React, { FC, useEffect, useState, useCallback } from 'react'
 import CustomSelect from '../../atoms/CustomSelect'
 import CustomButton from '../../atoms/CustomButton'
 import Notification from '../../atoms/Notification'
+import Loader from '../../atoms/Loader'
 import PlayerDeck from '../../organisms/PlayerDeck'
 
 import { useAuth, useRequest } from '../../../hooks/'
@@ -30,7 +31,7 @@ const Game: FC = () => {
   const [deckData, setDeckData] = useState(initDeckState)
 
   const { doRequest: getPlayerDeck } = useRequest({
-    url: 'deck/new/shuffledsad/?deck_count=1',
+    url: 'deck/new/shuffle/?deck_count=1',
     method: 'get',
     callback: (response: any) => setDeckData(response),
   })
@@ -49,6 +50,12 @@ const Game: FC = () => {
   //   async () => await getPlayerCards(),
   //   [getPlayerCards]
   // )
+  const handleChangeNumberOfPlayers = useCallback((value: number) => {
+    setPlayers(initPlayersState)
+    setDeckData(initDeckState)
+
+    return setNumberOfPlayers(value)
+  }, [setNumberOfPlayers])
 
   useEffect(() => {
     const compPlayers = getRandomPlayers(COMPUTER_PLAYERS, numberOfPlayers - 1)
@@ -73,13 +80,14 @@ const Game: FC = () => {
     }
   }
 
+  if (deckData?.loading) {
+    return <Loader />
+  }
+
   return (
     <div id="game">
       {deckData?.error && (
-        <Notification
-          type="error"
-          message={deckData?.error?.statusText}
-        />
+        <Notification type="error" message={deckData?.error?.statusText} />
       )}
       <CustomSelect
         name="players"
@@ -87,7 +95,7 @@ const Game: FC = () => {
         className="select-players"
         options={SELECT_PLAYER_OPTIONS}
         value={numberOfPlayers}
-        onChange={(name, value) => setNumberOfPlayers(value)}
+        onChange={(name, value) => handleChangeNumberOfPlayers(value)}
       />
       <div className={`wrapper ${getCustomWrapperClass()}`}>
         <CustomButton
