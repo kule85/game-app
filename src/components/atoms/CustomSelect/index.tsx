@@ -15,34 +15,32 @@ type Props = {
   onChange: (name: string, value: any) => {}
 }
 
-const CustomSelect: FC<Props> = ({
-  name,
-  label,
-  value,
-  options,
-  className,
-  onChange,
-}) => {
-  return (
-    <FormControl className={`custom-select ${className}`}>
-      <InputLabel id="label">{label}</InputLabel>
-      <Select
-        labelId="label"
-        value={value}
-        name={name}
-        label={label}
-        onChange={(e: any) => onChange(e.currentTarget, e.target.value)}
-      >
-        {options.map((item, key) => {
-          return (
-            <MenuItem key={key} value={item.value}>
-              {item.label}
-            </MenuItem>
-          )
-        })}
-      </Select>
-    </FormControl>
-  )
-}
+const CustomSelect: FC<Props> = memo(
+  ({ name, label, value, options, className, onChange }) => {
+    return (
+      <FormControl className={`custom-select ${className}`}>
+        <InputLabel id="label">{label}</InputLabel>
+        <Select
+          labelId="label"
+          value={value}
+          name={name}
+          label={label}
+          onChange={(e: any) => onChange(e.currentTarget, e.target.value)}
+        >
+          {options.map((item, key) => {
+            return (
+              <MenuItem key={key} value={item.value}>
+                {item.label}
+              </MenuItem>
+            )
+          })}
+        </Select>
+      </FormControl>
+    )
+  },
+  (prevProps, nextProps) => {
+    return prevProps.value === nextProps.value;
+  }
+)
 
-export default memo(CustomSelect)
+export default CustomSelect

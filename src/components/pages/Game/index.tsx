@@ -21,13 +21,26 @@ const Game: FC = () => {
   const [players, setPlayers] = useState(initPlayersState)
   const [deckId, setDeckId] = useState(null)
 
-  const { doRequest } = useRequest({
+  const { doRequest: getPlayerDeck } = useRequest({
     url: 'deck/new/shuffle/?deck_count=1',
     method: 'get',
     callback: (response: any) => setDeckId(response?.data?.deck_id || null),
   })
 
-  const handleDraw = useCallback(async () => await doRequest(), [doRequest])
+  const { doRequest: getPlayerCards } = useRequest({
+    url: `deck/${deckId}/draw/?count=10`,
+    method: 'get',
+    callback: (response: any) => console.log(response),
+  })
+
+  const handleDraw = useCallback(
+    async () => await getPlayerDeck(),
+    [getPlayerDeck]
+  )
+  const handleCards = useCallback(
+    async () => await getPlayerCards(),
+    [getPlayerCards]
+  )
 
   useEffect(() => {
     const compPlayers = getRandomPlayers(COMPUTER_PLAYERS, numberOfPlayers - 1)
@@ -35,7 +48,11 @@ const Game: FC = () => {
     setPlayers([...compPlayers, ...HUMAN_PLAYER])
   }, [numberOfPlayers])
 
-  console.log(deckId)
+  useEffect(() => {
+    if (deckId) {
+      handleCards()
+    }
+  }, [deckId])
 
   const getCustomWrapperClass = () => {
     switch (numberOfPlayers) {

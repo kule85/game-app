@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import React, { FC } from 'react'
 
 import Card from '../../atoms/Card'
 
@@ -19,4 +19,4 @@ const PlayerCards: FC<Props> = ({ cards, isHuman }) => {
   )
 }
 
-export default memo(PlayerCards)
+export default PlayerCards

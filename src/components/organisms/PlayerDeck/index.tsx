@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import React, { FC } from 'react'
 
 import PlayerInfo from '../../molecules/PlayerInfo'
 import PlayerCards from '../../molecules/PlayerCards'
@@ -25,4 +25,4 @@ const PlayerDeck: FC<Props> = ({ className, player }) => {
   )
 }
 
-export default memo(PlayerDeck)
+export default PlayerDeck

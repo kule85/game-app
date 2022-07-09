@@ -15,4 +15,4 @@ const Card: FC<Props> = ({ value, isHuman }) => {
   )
 }
 
-export default memo(Card)
+export default memo(Card, () => { return true })

@@ -1,5 +1,6 @@
 import React, { FC } from 'react'
-import Button from '@mui/material/Button'
+
+import CustomButton from '../../atoms/CustomButton'
 
 import { useAuth } from '../../../hooks'
 import { SELECT_PLAYER_OPTIONS } from '../../../utils'
@@ -15,14 +16,12 @@ const Home: FC = () => {
         <h2>Select number of players</h2>
         {SELECT_PLAYER_OPTIONS.map((item, key) => {
           return (
-            <Button
+            <CustomButton
+              label={item.label}
               key={key}
               variant="contained"
-              className="btn-custom"
               onClick={() => setNumberOfPlayers(item.value)}
-            >
-              {item.label}
-            </Button>
+            />
           )
         })}
       </div>

@@ -16,4 +16,6 @@ const PlayerInfo: FC<Props> = ({ playerName, playerScore }) => {
   )
 }
 
-export default memo(PlayerInfo)
+export default memo(PlayerInfo, (prevProps, nextProps) => {
+  return prevProps.playerScore === nextProps.playerScore
+})

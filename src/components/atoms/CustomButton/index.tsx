@@ -22,4 +22,4 @@ const CustomButton: FC<Props> = ({ label, className, variant, onClick }) => {
   )
 }
 
-export default memo(CustomButton)
+export default memo(CustomButton, () => { return true })
