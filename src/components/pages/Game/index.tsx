@@ -1,9 +1,8 @@
 import React, { FC, useEffect, useState, useCallback } from 'react'
-import { Button } from '@mui/material'
 
 import CustomSelect from '../../atoms/CustomSelect'
 import CustomButton from '../../atoms/CustomButton'
-import PlayerCards from '../../molecules/PlayerCards'
+import PlayerDeck from '../../organisms/PlayerDeck'
 
 import { useAuth, useRequest } from '../../../hooks/'
 import { getRandomPlayers } from '../../../helper'
@@ -67,21 +66,11 @@ const Game: FC = () => {
         />
         {players.map((player, key) => {
           return (
-            <div
+            <PlayerDeck
               key={key}
-              className={`player ${
-                player.isHumanPlayer ? 'human' : `comp-${key + 1}`
-              }`}
-            >
-              <h4>{player.name}</h4>
-              <p>Score: 0</p>
-              {player.cards.length && (
-                <PlayerCards
-                  cards={player.cards}
-                  isHuman={player.isHumanPlayer}
-                />
-              )}
-            </div>
+              player={player}
+              className={player.isHumanPlayer ? 'human' : `comp-${key + 1}`}
+            />
           )
         })}
       </div>
