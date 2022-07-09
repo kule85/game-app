@@ -1,12 +1,17 @@
 import React, { FC, useEffect, useState, useCallback } from 'react'
 import { Button } from '@mui/material'
 
-import PlayerCards from '../../molecules/PlayerCards'
 import CustomSelect from '../../atoms/CustomSelect'
+import CustomButton from '../../atoms/CustomButton'
+import PlayerCards from '../../molecules/PlayerCards'
 
 import { useAuth, useRequest } from '../../../hooks/'
 import { getRandomPlayers } from '../../../helper'
-import { COMPUTER_PLAYERS, HUMAN_PLAYER, SELECT_PLAYER_OPTIONS } from '../../../utils'
+import {
+  COMPUTER_PLAYERS,
+  HUMAN_PLAYER,
+  SELECT_PLAYER_OPTIONS,
+} from '../../../utils'
 
 import './style.scss'
 
@@ -55,13 +60,11 @@ const Game: FC = () => {
         onChange={(name, value) => setNumberOfPlayers(value)}
       />
       <div className={`wrapper ${getCustomWrapperClass()}`}>
-        <Button
+        <CustomButton
+          label="Draw"
           variant="contained"
-          className="btn-custom"
           onClick={() => handleDraw()}
-        >
-          Draw
-        </Button>
+        />
         {players.map((player, key) => {
           return (
             <div

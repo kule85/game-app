@@ -1,10 +1,8 @@
 import { request } from '../utils'
 
-type Methods = 'head' | 'options' | 'put' | 'post' | 'patch' | 'delete' | 'get'
-
 interface paramsInterface {
   url: string
-  method: Methods
+  method: 'head' | 'options' | 'put' | 'post' | 'patch' | 'delete' | 'get'
   body?: object
   callback?: any
 }
