@@ -1,19 +1,22 @@
 export const COMPUTER_PLAYERS = [
   {
+    id: 1,
     name: 'Player 1',
-    cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    cards: [],
     collectedCards: [],
     isHumanPlayer: false,
   },
   {
+    id: 2,
     name: 'Player 2',
-    cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    cards: [],
     collectedCards: [],
     isHumanPlayer: false,
   },
   {
+    id: 3,
     name: 'Player 3',
-    cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    cards: [],
     collectedCards: [],
     isHumanPlayer: false,
   },
@@ -21,8 +24,9 @@ export const COMPUTER_PLAYERS = [
 
 export const HUMAN_PLAYER = [
   {
+    id: 4,
     name: 'Marko',
-    cards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    cards: [],
     collectedCards: [],
     isHumanPlayer: true,
   },

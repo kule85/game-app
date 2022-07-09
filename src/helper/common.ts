@@ -1,4 +1,5 @@
 interface PlayerItem {
+  id: number
   name: string
   cards: any
   collectedCards: any

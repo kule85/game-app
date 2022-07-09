@@ -12,8 +12,8 @@ type Props = {
 const PlayerCards: FC<Props> = ({ cards, isHuman }) => {
   return (
     <div className="card-holder">
-      {cards.map((card: number, key: number) => {
-        return <Card key={key} value={card} isHuman={isHuman} />
+      {cards.map((card, key) => {
+        return <Card key={key} card={card} isHuman={isHuman} />
       })}
     </div>
   )

@@ -18,14 +18,16 @@ export const useRequest = (params: paramsInterface) => {
 
     try {
       if (method && isFetched) {
-        isFetched = false
         const response = await request[method](url, {
           ...body,
           ...additionalParams,
         })
+
         if (callback) {
           callback({ data: response.data, loading: false, error: null })
         }
+
+        isFetched = false
       }
     } catch (err: any) {
       if (callback) {

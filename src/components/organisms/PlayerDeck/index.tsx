@@ -18,7 +18,7 @@ const PlayerDeck: FC<Props> = ({ className, player }) => {
   return (
     <div className={`player ${className}`}>
       <PlayerInfo playerName={player.name} playerScore={0} />
-      {player.cards.length && (
+      {player.cards.length > 0 && (
         <PlayerCards cards={player.cards} isHuman={player.isHumanPlayer} />
       )}
     </div>

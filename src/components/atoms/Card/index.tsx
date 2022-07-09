@@ -3,16 +3,20 @@ import React, { FC, memo } from 'react'
 import './style.scss'
 
 type Props = {
-  value: number
+  card: {
+    image: string
+  }
   isHuman: boolean
 }
 
-const Card: FC<Props> = ({ value, isHuman }) => {
+const Card: FC<Props> = ({ card, isHuman }) => {
   return (
     <div className={`card ${isHuman ? 'human-card' : ''}`}>
-      {isHuman ? value : null}
+      <img src={card.image} alt="Image" />
     </div>
   )
 }
 
-export default memo(Card, () => { return true })
+export default memo(Card, () => {
+  return true
+})

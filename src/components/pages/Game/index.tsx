@@ -23,7 +23,7 @@ type DeckProps = {
 }
 
 const initPlayersState: any[] = []
-const initDeckState: DeckProps = { data: {}, loading: false, error: null }
+const initDeckState: DeckProps = { data: null, loading: false, error: null }
 
 const Game: FC = () => {
   const { numberOfPlayers, setNumberOfPlayers } = useAuth()
@@ -36,26 +36,43 @@ const Game: FC = () => {
     callback: (response: any) => setDeckData(response),
   })
 
-  // const { doRequest: getPlayerCards } = useRequest({
-  //   url: `deck/${deckId}/draw/?count=10`,
-  //   method: 'get',
-  //   callback: (response: any) => console.log(response),
-  // })
+  const { doRequest: getPlayerCards } = useRequest({
+    url: `deck/${deckData.data?.deck_id}/draw/?count=${numberOfPlayers * 10}`,
+    method: 'get',
+    callback: (response: any) => {
+      const cardsRes = response?.data?.cards
+
+      if (cardsRes) {
+        setPlayers(
+          players.map((item, key) => {
+            return {
+              ...item,
+              cards: cardsRes.slice(key * 10, (key + 1) * 10),
+            }
+          })
+        )
+      }
+    },
+  })
 
   const handleDraw = useCallback(
     async () => await getPlayerDeck(),
     [getPlayerDeck]
   )
-  // const handleCards = useCallback(
-  //   async () => await getPlayerCards(),
-  //   [getPlayerCards]
-  // )
-  const handleChangeNumberOfPlayers = useCallback((value: number) => {
-    setPlayers(initPlayersState)
-    setDeckData(initDeckState)
 
-    return setNumberOfPlayers(value)
-  }, [setNumberOfPlayers])
+  const handleCards = useCallback(async () => {
+    await getPlayerCards()
+  }, [getPlayerCards])
+
+  const handleChangeNumberOfPlayers = useCallback(
+    (value: number) => {
+      setPlayers(initPlayersState)
+      setDeckData(initDeckState)
+
+      return setNumberOfPlayers(value)
+    },
+    [setNumberOfPlayers]
+  )
 
   useEffect(() => {
     const compPlayers = getRandomPlayers(COMPUTER_PLAYERS, numberOfPlayers - 1)
@@ -63,11 +80,11 @@ const Game: FC = () => {
     setPlayers([...compPlayers, ...HUMAN_PLAYER])
   }, [numberOfPlayers])
 
-  // useEffect(() => {
-  //   if (deckId) {
-  //     handleCards()
-  //   }
-  // }, [deckId])
+  useEffect(() => {
+    if (deckData.data?.deck_id) {
+      handleCards()
+    }
+  }, [deckData])
 
   const getCustomWrapperClass = () => {
     switch (numberOfPlayers) {
@@ -98,11 +115,13 @@ const Game: FC = () => {
         onChange={(name, value) => handleChangeNumberOfPlayers(value)}
       />
       <div className={`wrapper ${getCustomWrapperClass()}`}>
-        <CustomButton
-          label="Draw"
-          variant="contained"
-          onClick={() => handleDraw()}
-        />
+        {!deckData.data && (
+          <CustomButton
+            label="Draw"
+            variant="contained"
+            onClick={() => handleDraw()}
+          />
+        )}
         {players.map((player, key) => {
           return (
             <PlayerDeck
