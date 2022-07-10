@@ -6,85 +6,19 @@ import Notification from '../../atoms/Notification'
 import Loader from '../../atoms/Loader'
 import PlayerDeck from '../../organisms/PlayerDeck'
 
-import { useGame, useRequest } from '../../../hooks/'
-import { getRandomPlayers } from '../../../helper'
-import {
-  COMPUTER_PLAYERS,
-  HUMAN_PLAYER,
-  SELECT_PLAYER_OPTIONS,
-} from '../../../utils'
+import { useGame } from '../../../hooks/'
+import { SELECT_PLAYER_OPTIONS } from '../../../utils'
 
 import './style.scss'
 
-type DeckProps = {
-  data: any
-  loading: boolean
-  error: any
-}
-
-const initPlayersState: any[] = []
-const initDeckState: DeckProps = { data: null, loading: false, error: null }
-
 const Game: FC = () => {
-  const { numberOfPlayers, setNumberOfPlayers } = useGame()
-  const [players, setPlayers] = useState(initPlayersState)
-  const [deckData, setDeckData] = useState(initDeckState)
-
-  const { doRequest: getPlayerDeck } = useRequest({
-    url: 'deck/new/shuffle/?deck_count=1',
-    method: 'get',
-    callback: (response: any) => setDeckData(response),
-  })
-
-  const { doRequest: getPlayerCards } = useRequest({
-    url: `deck/${deckData.data?.deck_id}/draw/?count=${numberOfPlayers * 10}`,
-    method: 'get',
-    callback: (response: any) => {
-      const cardsRes = response?.data?.cards
-
-      if (cardsRes) {
-        setPlayers(
-          players.map((item, key) => {
-            return {
-              ...item,
-              cards: cardsRes.slice(key * 10, (key + 1) * 10),
-            }
-          })
-        )
-      }
-    },
-  })
-
-  const handleDraw = useCallback(
-    async () => await getPlayerDeck(),
-    [getPlayerDeck]
-  )
-
-  const handleCards = useCallback(async () => {
-    await getPlayerCards()
-  }, [getPlayerCards])
-
-  const handleChangeNumberOfPlayers = useCallback(
-    (value: number) => {
-      setPlayers(initPlayersState)
-      setDeckData(initDeckState)
-
-      return setNumberOfPlayers(value)
-    },
-    [setNumberOfPlayers]
-  )
-
-  useEffect(() => {
-    const compPlayers = getRandomPlayers(COMPUTER_PLAYERS, numberOfPlayers - 1)
-
-    setPlayers([...compPlayers, ...HUMAN_PLAYER])
-  }, [numberOfPlayers])
-
-  useEffect(() => {
-    if (deckData.data?.deck_id) {
-      handleCards()
-    }
-  }, [deckData])
+  const {
+    players,
+    deckData,
+    numberOfPlayers,
+    onChangeNumberOfPlayers,
+    onDraw,
+  } = useGame()
 
   const getCustomWrapperClass = () => {
     switch (numberOfPlayers) {
@@ -112,14 +46,14 @@ const Game: FC = () => {
         className="select-players"
         options={SELECT_PLAYER_OPTIONS}
         value={numberOfPlayers}
-        onChange={(name, value) => handleChangeNumberOfPlayers(value)}
+        onChange={(name, value) => onChangeNumberOfPlayers(value)}
       />
       <div className={`wrapper ${getCustomWrapperClass()}`}>
         {!deckData.data && (
           <CustomButton
             label="Draw"
             variant="contained"
-            onClick={() => handleDraw()}
+            onClick={() => onDraw()}
           />
         )}
         {players.map((player, key) => {
