@@ -170,7 +170,7 @@ const GameProvider: FC<Props> = ({ children }) => {
     if (numberOfPlayers > 0 && throwCards.length === numberOfPlayers) {
       collectCardPerPlayer()
     }
-  }, [throwCards])
+  }, [throwCards, numberOfPlayers, collectCardPerPlayer])
 
   useEffect(() => {
     if (deckData.data?.deck_id) {
@@ -202,7 +202,7 @@ const GameProvider: FC<Props> = ({ children }) => {
       onPlay,
       onCalculateCardsValues,
     }),
-    [numberOfPlayers, players, deckData, isHumanPlay]
+    [numberOfPlayers, players, deckData, isHumanPlay, onChangeNumberOfPlayers, onDraw, onPlay]
   )
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>
