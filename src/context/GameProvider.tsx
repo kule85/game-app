@@ -200,7 +200,7 @@ const GameProvider: FC<Props> = ({ children }) => {
     }
 
     getWinner()
-  }, [isHumanPlay, players, onPlay])
+  }, [isHumanPlay, players, onPlay, getWinner])
 
   useEffect(() => {
     if (numberOfPlayers > 0 && throwCards.length === numberOfPlayers) {
