@@ -108,15 +108,12 @@ const GameProvider: FC<Props> = ({ children }) => {
     [setNumberOfPlayers]
   )
 
-  const onPlay = useCallback(
-    (card: any, player: any) => {
-      setIsHumanPlay(false)
-      setThrowCards((prev) => {
-        return [...prev, Object.assign(card, { playerId: player.id })]
-      })
-    },
-    []
-  )
+  const onPlay = useCallback((card: any, player: any) => {
+    setIsHumanPlay(false)
+    setThrowCards((prev) => {
+      return [...prev, Object.assign(card, { playerId: player.id })]
+    })
+  }, [])
 
   const collectCardPerPlayer = useCallback(() => {
     const maxValueByPlayer = throwCards.reduce((prev: any, current: any) => {
@@ -151,6 +148,43 @@ const GameProvider: FC<Props> = ({ children }) => {
     }, 0)
   }
 
+  const getWinner = useCallback(() => {
+    const isGameStarted =
+      [].concat.apply(
+        [],
+        players.map((item) => item.collectedCards)
+      ).length !== 0
+
+    const isGameDone =
+      [].concat.apply(
+        [],
+        players.map((item) => item.cards)
+      ).length === 0
+
+    if (isGameStarted && isGameDone) {
+      const score = players.map((item) => {
+        return {
+          ...item,
+          score: item.collectedCards.reduce((prev: any, current: any) => {
+            return prev + CARD_VALUE[current.value]
+          }, 0),
+        }
+      })
+
+      const winner = score.reduce((prev, current) => {
+        return prev.score > current.score ? prev : current
+      })
+
+      if (
+        window.confirm(`Winner is ${winner.name}. Score is ${winner.score}`)
+      ) {
+        setPlayers(initArrayState)
+        setDeckData(initDeckState)
+        setNumberOfPlayers(0)
+      }
+    }
+  }, [players])
+
   useEffect(() => {
     if (!isHumanPlay) {
       const computerPlayers = players.filter((item) => !item.isHumanPlayer)
@@ -164,6 +198,8 @@ const GameProvider: FC<Props> = ({ children }) => {
         }
       })
     }
+
+    getWinner()
   }, [isHumanPlay, players, onPlay])
 
   useEffect(() => {
@@ -202,7 +238,15 @@ const GameProvider: FC<Props> = ({ children }) => {
       onPlay,
       onCalculateCardsValues,
     }),
-    [numberOfPlayers, players, deckData, isHumanPlay, onChangeNumberOfPlayers, onDraw, onPlay]
+    [
+      numberOfPlayers,
+      players,
+      deckData,
+      isHumanPlay,
+      onChangeNumberOfPlayers,
+      onDraw,
+      onPlay,
+    ]
   )
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>
