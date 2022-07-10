@@ -2,13 +2,13 @@ import React, { FC } from 'react'
 
 import CustomButton from '../../atoms/CustomButton'
 
-import { useAuth } from '../../../hooks'
+import { useGame } from '../../../hooks'
 import { SELECT_PLAYER_OPTIONS } from '../../../utils'
 
 import './style.scss'
 
 const Home: FC = () => {
-  const { setNumberOfPlayers } = useAuth()
+  const { setNumberOfPlayers } = useGame()
 
   return (
     <div id="home">

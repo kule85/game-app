@@ -6,7 +6,7 @@ import Notification from '../../atoms/Notification'
 import Loader from '../../atoms/Loader'
 import PlayerDeck from '../../organisms/PlayerDeck'
 
-import { useAuth, useRequest } from '../../../hooks/'
+import { useGame, useRequest } from '../../../hooks/'
 import { getRandomPlayers } from '../../../helper'
 import {
   COMPUTER_PLAYERS,
@@ -26,7 +26,7 @@ const initPlayersState: any[] = []
 const initDeckState: DeckProps = { data: null, loading: false, error: null }
 
 const Game: FC = () => {
-  const { numberOfPlayers, setNumberOfPlayers } = useAuth()
+  const { numberOfPlayers, setNumberOfPlayers } = useGame()
   const [players, setPlayers] = useState(initPlayersState)
   const [deckData, setDeckData] = useState(initDeckState)
 

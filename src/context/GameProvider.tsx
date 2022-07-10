@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-interface AuthContextInterface {
+interface GameContextInterface {
   numberOfPlayers: number
   setNumberOfPlayers: any
 }
@@ -17,13 +17,13 @@ const initState = {
   setNumberOfPlayers: () => {},
 }
 
-export const AuthContext = createContext<AuthContextInterface>(initState)
+export const GameContext = createContext<GameContextInterface>(initState)
 
 type Props = {
   children: JSX.Element
 }
 
-const AuthProvider: FC<Props> = ({ children }) => {
+const GameProvider: FC<Props> = ({ children }) => {
   const navigate = useNavigate()
   const [numberOfPlayers, setNumberOfPlayers] = useState(0)
 
@@ -41,7 +41,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
     [numberOfPlayers]
   )
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return <GameContext.Provider value={value}>{children}</GameContext.Provider>
 }
 
-export default AuthProvider
+export default GameProvider

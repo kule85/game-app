@@ -12,7 +12,7 @@ type Props = {
 const Card: FC<Props> = ({ card, isHuman }) => {
   return (
     <div className={`card ${isHuman ? 'human-card' : ''}`}>
-      <img src={card.image} alt="Image" />
+      <img src={card.image} alt="Card" />
     </div>
   )
 }
