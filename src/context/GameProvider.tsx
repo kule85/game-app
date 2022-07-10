@@ -110,29 +110,12 @@ const GameProvider: FC<Props> = ({ children }) => {
 
   const onPlay = useCallback(
     (card: any, player: any) => {
-      const indexCard = player.cards.findIndex(
-        (item: any) => item.code === card.code
-      )
-      const indexPlayer = players.findIndex(
-        (item: any) => item.id === player.id
-      )
-
-      setPlayers(
-        players.map((item, key) => {
-          if (key === indexPlayer) {
-            delete item.cards[indexCard]
-            return item
-          }
-
-          return item
-        })
-      )
       setIsHumanPlay(false)
       setThrowCards((prev) => {
         return [...prev, Object.assign(card, { playerId: player.id })]
       })
     },
-    [isHumanPlay, players]
+    []
   )
 
   const collectCardPerPlayer = useCallback(() => {
@@ -140,19 +123,26 @@ const GameProvider: FC<Props> = ({ children }) => {
       return CARD_VALUE[prev.value] > CARD_VALUE[current.value] ? prev : current
     })
 
-    setPlayers(
-      players.map((item) => {
+    setPlayers((prev) => {
+      return prev.map((item) => {
+        const code = throwCards.find((el) => el.playerId === item.id)?.code
+
         if (item.id === maxValueByPlayer.playerId) {
           return {
             ...item,
             collectedCards: [...item.collectedCards, ...throwCards],
+            cards: item.cards.filter((el: any) => el.code !== code),
           }
         }
 
-        return item
+        return {
+          ...item,
+          cards: item.cards.filter((el: any) => el.code !== code),
+        }
       })
-    )
+    })
     setIsHumanPlay(true)
+    setThrowCards([])
   }, [throwCards])
 
   const onCalculateCardsValues = (cards: any) => {
@@ -174,7 +164,7 @@ const GameProvider: FC<Props> = ({ children }) => {
         }
       })
     }
-  }, [isHumanPlay])
+  }, [isHumanPlay, players, onPlay])
 
   useEffect(() => {
     if (numberOfPlayers > 0 && throwCards.length === numberOfPlayers) {

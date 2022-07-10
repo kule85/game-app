@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import React, { FC } from 'react'
 
 import { useGame } from '../../../hooks'
 
@@ -26,6 +26,4 @@ const Card: FC<Props> = ({ card, player }) => {
   )
 }
 
-export default memo(Card, () => {
-  return true
-})
+export default Card
