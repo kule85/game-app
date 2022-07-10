@@ -1,17 +1,26 @@
 import React, { FC, memo } from 'react'
 
+import { useGame } from '../../../hooks'
+
 import './style.scss'
 
 type Props = {
   card: {
     image: string
   }
-  isHuman: boolean
+  player: {
+    isHumanPlayer: boolean
+  }
 }
 
-const Card: FC<Props> = ({ card, isHuman }) => {
+const Card: FC<Props> = ({ card, player }) => {
+  const { isHumanPlay, onPlay } = useGame()
+
   return (
-    <div className={`card ${isHuman ? 'human-card' : ''}`}>
+    <div
+      className={`card ${player.isHumanPlayer ? 'human-card' : ''}`}
+      onClick={() => (isHumanPlay ? onPlay(card, player) : {})}
+    >
       <img src={card.image} alt="Card" />
     </div>
   )

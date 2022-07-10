@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useRequest } from '../hooks'
 import { getRandomPlayers } from '../helper'
-import { COMPUTER_PLAYERS, HUMAN_PLAYER } from '../utils'
+import { COMPUTER_PLAYERS, HUMAN_PLAYER, CARD_VALUE } from '../utils'
 
 interface PlayerItem {
   id: number
@@ -30,25 +30,31 @@ type DeckProps = {
   error: any
 }
 
-const initPlayersState: any[] = []
+const initArrayState: any[] = []
 const initDeckState: DeckProps = { data: null, loading: false, error: null }
 
 interface GameContextInterface {
   players: Array<PlayerItem>
   numberOfPlayers: number
+  isHumanPlay: boolean
   deckData: typeof initDeckState
   setNumberOfPlayers: any
   onChangeNumberOfPlayers: any
   onDraw: any
+  onPlay: any
+  onCalculateCardsValues: any
 }
 
 const initState = {
   deckData: initDeckState,
   players: [],
   numberOfPlayers: 0,
+  isHumanPlay: true,
   setNumberOfPlayers: () => {},
   onChangeNumberOfPlayers: () => {},
   onDraw: () => {},
+  onPlay: () => {},
+  onCalculateCardsValues: () => {},
 }
 
 export const GameContext = createContext<GameContextInterface>(initState)
@@ -56,8 +62,10 @@ export const GameContext = createContext<GameContextInterface>(initState)
 const GameProvider: FC<Props> = ({ children }) => {
   const navigate = useNavigate()
   const [numberOfPlayers, setNumberOfPlayers] = useState(0)
-  const [players, setPlayers] = useState(initPlayersState)
+  const [players, setPlayers] = useState(initArrayState)
+  const [throwCards, setThrowCards] = useState(initArrayState)
   const [deckData, setDeckData] = useState(initDeckState)
+  const [isHumanPlay, setIsHumanPlay] = useState(true)
 
   const { doRequest: getPlayerDeck } = useRequest({
     url: 'deck/new/shuffle/?deck_count=1',
@@ -92,13 +100,87 @@ const GameProvider: FC<Props> = ({ children }) => {
 
   const onChangeNumberOfPlayers = useCallback(
     (value: number) => {
-      setPlayers(initPlayersState)
+      setPlayers(initArrayState)
       setDeckData(initDeckState)
 
       return setNumberOfPlayers(value)
     },
     [setNumberOfPlayers]
   )
+
+  const onPlay = useCallback(
+    (card: any, player: any) => {
+      const indexCard = player.cards.findIndex(
+        (item: any) => item.code === card.code
+      )
+      const indexPlayer = players.findIndex(
+        (item: any) => item.id === player.id
+      )
+
+      setPlayers(
+        players.map((item, key) => {
+          if (key === indexPlayer) {
+            delete item.cards[indexCard]
+            return item
+          }
+
+          return item
+        })
+      )
+      setIsHumanPlay(false)
+      setThrowCards((prev) => {
+        return [...prev, Object.assign(card, { playerId: player.id })]
+      })
+    },
+    [isHumanPlay, players]
+  )
+
+  const collectCardPerPlayer = useCallback(() => {
+    const maxValueByPlayer = throwCards.reduce((prev: any, current: any) => {
+      return CARD_VALUE[prev.value] > CARD_VALUE[current.value] ? prev : current
+    })
+
+    setPlayers(
+      players.map((item) => {
+        if (item.id === maxValueByPlayer.playerId) {
+          return {
+            ...item,
+            collectedCards: [...item.collectedCards, ...throwCards],
+          }
+        }
+
+        return item
+      })
+    )
+    setIsHumanPlay(true)
+  }, [throwCards])
+
+  const onCalculateCardsValues = (cards: any) => {
+    return cards.reduce((prev: any, current: any) => {
+      return prev + CARD_VALUE[current.value]
+    }, 0)
+  }
+
+  useEffect(() => {
+    if (!isHumanPlay) {
+      const computerPlayers = players.filter((item) => !item.isHumanPlayer)
+
+      computerPlayers.forEach((player) => {
+        const randomCard =
+          player.cards[Math.floor(Math.random() * player.cards.length)]
+
+        if (randomCard) {
+          onPlay(randomCard, player)
+        }
+      })
+    }
+  }, [isHumanPlay])
+
+  useEffect(() => {
+    if (numberOfPlayers > 0 && throwCards.length === numberOfPlayers) {
+      collectCardPerPlayer()
+    }
+  }, [throwCards])
 
   useEffect(() => {
     if (deckData.data?.deck_id) {
@@ -107,11 +189,13 @@ const GameProvider: FC<Props> = ({ children }) => {
   }, [deckData])
 
   useEffect(() => {
-    const compPlayers = getRandomPlayers(COMPUTER_PLAYERS, numberOfPlayers - 1)
-
-    setPlayers([...compPlayers, ...HUMAN_PLAYER])
-
     if (numberOfPlayers) {
+      const compPlayers = getRandomPlayers(
+        COMPUTER_PLAYERS,
+        numberOfPlayers - 1
+      )
+
+      setPlayers([...compPlayers, ...HUMAN_PLAYER])
       navigate('/game')
     }
   }, [numberOfPlayers, navigate])
@@ -120,12 +204,15 @@ const GameProvider: FC<Props> = ({ children }) => {
     () => ({
       deckData,
       players,
+      isHumanPlay,
       numberOfPlayers,
       setNumberOfPlayers,
       onChangeNumberOfPlayers,
       onDraw,
+      onPlay,
+      onCalculateCardsValues,
     }),
-    [numberOfPlayers, players, deckData]
+    [numberOfPlayers, players, deckData, isHumanPlay]
   )
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>
