@@ -1,21 +1,34 @@
 import React, { FC, memo } from 'react'
+import { useGame } from '../../../hooks'
 
 import './style.scss'
 
-type Props = {
-  playerName: string
-  playerScore: string | number
+interface PlayerItem {
+  id: number
+  name: string
+  cards: any
+  collectedCards: any
+  isHumanPlayer: boolean
 }
 
-const PlayerInfo: FC<Props> = ({ playerName, playerScore }) => {
+type Props = {
+  player: PlayerItem
+}
+
+const PlayerInfo: FC<Props> = ({ player }) => {
+  const { onCalculateCardsValues } = useGame()
+
   return (
     <>
-      <h4>{playerName}</h4>
-      <p>Score: {playerScore}</p>
+      <h4>{player.name}</h4>
+      <p>Score: {onCalculateCardsValues(player.collectedCards)}</p>
     </>
   )
 }
 
 export default memo(PlayerInfo, (prevProps, nextProps) => {
-  return prevProps.playerScore === nextProps.playerScore
+  return (
+    prevProps.player.collectedCards.length ===
+    nextProps.player.collectedCards.length
+  )
 })

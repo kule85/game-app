@@ -39,8 +39,10 @@ const CustomSelect: FC<Props> = memo(
     )
   },
   (prevProps, nextProps) => {
-    return prevProps.value === nextProps.value;
+    return prevProps.value === nextProps.value
   }
 )
 
-export default CustomSelect
+export default memo(CustomSelect, (prevProps, nextProps) => {
+  return prevProps.value === nextProps.value
+})

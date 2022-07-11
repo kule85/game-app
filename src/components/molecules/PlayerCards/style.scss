@@ -2,4 +2,14 @@
 
 .card-holder {
   display: flex;
+
+  &.collect-card-holder {
+    justify-content: center;
+
+    .card {
+      width: 40px;
+      height: 60px;
+      margin: 0 2px;
+    }
+  }
 }

@@ -4,16 +4,28 @@ import Card from '../../atoms/Card'
 
 import './style.scss'
 
-type Props = {
-  cards: []
-  isHuman: boolean
+interface PlayerItem {
+  id: number
+  name: string
+  cards: any
+  collectedCards: any
+  isHumanPlayer: boolean
 }
 
-const PlayerCards: FC<Props> = ({ cards, isHuman }) => {
+type Props = {
+  player: PlayerItem
+  isCollectedCards?: boolean
+}
+
+const PlayerCards: FC<Props> = ({ player, isCollectedCards = false }) => {
+  const cards = !isCollectedCards ? player?.cards : player?.collectedCards
+
   return (
-    <div className="card-holder">
-      {cards.map((card, key) => {
-        return <Card key={key} card={card} isHuman={isHuman} />
+    <div
+      className={`card-holder ${isCollectedCards ? 'collect-card-holder' : ''}`}
+    >
+      {cards.map((card: any, key: number) => {
+        return <Card key={key} card={card} player={player} />
       })}
     </div>
   )
