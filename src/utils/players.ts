@@ -48,7 +48,7 @@ export const SELECT_PLAYER_OPTIONS = [
 ]
 
 export const CARD_VALUE: any = {
-  1: 1,
+  ACE: 1,
   2: 2,
   3: 3,
   4: 4,
@@ -61,5 +61,4 @@ export const CARD_VALUE: any = {
   JACK: 12,
   QUEEN: 13,
   KING: 14,
-  ACE: 15,
 }
