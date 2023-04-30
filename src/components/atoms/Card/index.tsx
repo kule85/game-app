@@ -15,7 +15,7 @@ type Props = {
 
 const Card: FC<Props> = ({ card, player }) => {
   const { isHumanPlay, onPlay } = useGame()
-  console.log('test dd')
+  console.log('test dddsad')
   return (
     <div
       className={`card ${player.isHumanPlayer ? 'human-card' : ''}`}
